@@ -7,54 +7,62 @@
   <style>
     body { font-family: sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
     h2 { margin-bottom: 20px; }
-    audio { width: 90%; max-width: 600px; margin-top: 20px; }
-    ul { list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; }
+    img { width: 200px; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 20px; }
+    audio { width: 90%; max-width: 600px; margin-bottom: 20px; }
+    ul { list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
     li { cursor: pointer; background: #222; padding: 10px 15px; border-radius: 5px; }
     li.active { background: #4caf50; }
   </style>
 </head>
 <body>
-  <h2>🎧 Ибо так Podcast</h2>
+  <h2>🎧 RAI Podcast</h2>
+  <!-- Общая обложка -->
+  <img src="cover.jpg" alt="Обложка подкаста">
+
+  <audio id="player" controls>
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
   <ul id="episodeList">
     <li data-src="episode1.mp3" class="active">Эпизод 1</li>
     <li data-src="episode2.mp3">Эпизод 2</li>
     <li data-src="episode3.mp3">Эпизод 3</li>
   </ul>
-  <audio id="player" controls>
-    <source src="episode1.mp3" type="audio/mpeg">
-    Ваш браузер не поддерживает аудио.
-  </audio>
 
   <script>
     const player = document.getElementById('player');
     const episodes = document.querySelectorAll('#episodeList li');
-    
-    // Восстановление позиции для каждого эпизода
+
     const KEY_PREFIX = 'podcast_pos_';
+    const LAST_EP_KEY = 'podcast_last_ep';
 
     function loadEpisode(episode) {
       const src = episode.dataset.src;
       player.src = src;
 
-      // Сохраняем активную подсветку
       episodes.forEach(e => e.classList.remove('active'));
       episode.classList.add('active');
 
-      // Восстановление позиции
+      localStorage.setItem(LAST_EP_KEY, src);
+
       const saved = localStorage.getItem(KEY_PREFIX + src);
       if (saved) player.currentTime = parseFloat(saved);
       player.play();
     }
 
+    window.addEventListener('load', () => {
+      const last = localStorage.getItem(LAST_EP_KEY);
+      const episode = Array.from(episodes).find(e => e.dataset.src === last) || episodes[0];
+      loadEpisode(episode);
+    });
+
     episodes.forEach(episode => {
       episode.addEventListener('click', () => loadEpisode(episode));
     });
 
-    // Сохраняем прогресс
     player.addEventListener('timeupdate', () => {
       localStorage.setItem(KEY_PREFIX + player.src.split('/').pop(), player.currentTime);
     });
   </script>
 </body>
 </html>
-
