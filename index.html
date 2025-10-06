@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAI Podcast</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    audio {
+      width: 90%;
+      max-width: 600px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎧 Ибо так говорит Писание - Мой подкаст</h2>
+  <audio id="player" controls>
+    <source src="episode1.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
+  <script>
+    const player = document.getElementById('player');
+    const KEY = 'podcast_position';
+
+    // Восстанавливаем позицию при загрузке
+    window.addEventListener('load', () => {
+      const saved = localStorage.getItem(KEY);
+      if (saved) player.currentTime = parseFloat(saved);
+    });
+
+    // Сохраняем позицию каждые 5 секунд
+    player.addEventListener('timeupdate', () => {
+      localStorage.setItem(KEY, player.currentTime);
+    });
+  </script>
+</body>
+</html>
