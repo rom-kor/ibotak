@@ -5,20 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RAI Podcast</title>
   <style>
-    body { font-family: sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-    h2 { margin-bottom: 20px; }
-    img { width: 200px; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 20px; }
-    audio { width: 90%; max-width: 600px; margin-bottom: 20px; }
-    ul { list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-    li { cursor: pointer; background: #222; padding: 10px 15px; border-radius: 5px; }
-    li.active { background: #4caf50; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url('cover.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 50px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+    audio {
+      width: 90%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    li {
+      cursor: pointer;
+      background: rgba(0,0,0,0.6);
+      padding: 10px 15px;
+      border-radius: 5px;
+    }
+    li.active {
+      background: rgba(76, 175, 80, 0.8);
+    }
   </style>
 </head>
 <body>
-  <h2>🎧 RAI Podcast</h2>
-  <!-- Общая обложка -->
-  <img src="cover.jpg" alt="Обложка подкаста">
 
+  <h2>🎧 RAI Podcast</h2>
   <audio id="player" controls>
     Ваш браузер не поддерживает аудио.
   </audio>
@@ -64,5 +93,6 @@
       localStorage.setItem(KEY_PREFIX + player.src.split('/').pop(), player.currentTime);
     });
   </script>
+
 </body>
 </html>
