@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RAI Podcast</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #111;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    audio {
-      width: 90%;
-      max-width: 600px;
-      margin-top: 20px;
-    }
+    body { font-family: sans-serif; background: #111; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    h2 { margin-bottom: 20px; }
+    audio { width: 90%; max-width: 600px; margin-top: 20px; }
+    ul { list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap; }
+    li { cursor: pointer; background: #222; padding: 10px 15px; border-radius: 5px; }
+    li.active { background: #4caf50; }
   </style>
 </head>
 <body>
-  <h2>🎧 Ибо так говорит Писание - Мой подкаст</h2>
+  <h2>🎧 RAI Podcast</h2>
+  <ul id="episodeList">
+    <li data-src="episode1.mp3" class="active">Эпизод 1</li>
+    <li data-src="episode2.mp3">Эпизод 2</li>
+    <li data-src="episode3.mp3">Эпизод 3</li>
+  </ul>
   <audio id="player" controls>
     <source src="episode1.mp3" type="audio/mpeg">
     Ваш браузер не поддерживает аудио.
@@ -31,17 +27,32 @@
 
   <script>
     const player = document.getElementById('player');
-    const KEY = 'podcast_position';
+    const episodes = document.querySelectorAll('#episodeList li');
+    
+    // Восстановление позиции для каждого эпизода
+    const KEY_PREFIX = 'podcast_pos_';
 
-    // Восстанавливаем позицию при загрузке
-    window.addEventListener('load', () => {
-      const saved = localStorage.getItem(KEY);
+    function loadEpisode(episode) {
+      const src = episode.dataset.src;
+      player.src = src;
+
+      // Сохраняем активную подсветку
+      episodes.forEach(e => e.classList.remove('active'));
+      episode.classList.add('active');
+
+      // Восстановление позиции
+      const saved = localStorage.getItem(KEY_PREFIX + src);
       if (saved) player.currentTime = parseFloat(saved);
+      player.play();
+    }
+
+    episodes.forEach(episode => {
+      episode.addEventListener('click', () => loadEpisode(episode));
     });
 
-    // Сохраняем позицию каждые 5 секунд
+    // Сохраняем прогресс
     player.addEventListener('timeupdate', () => {
-      localStorage.setItem(KEY, player.currentTime);
+      localStorage.setItem(KEY_PREFIX + player.src.split('/').pop(), player.currentTime);
     });
   </script>
 </body>
