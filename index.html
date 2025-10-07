@@ -17,21 +17,29 @@
       min-height: 100vh;
       padding-top: 50px;
     }
-    h2 {
-      text-shadow: 0 0 10px rgba(0,0,0,0.7);
-      margin-bottom: 20px;
-    }
+    h2 { text-shadow: 0 0 10px rgba(0,0,0,0.7); margin-bottom: 30px; }
     .custom-player {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 15px;
+      gap: 20px;
       background: rgba(0,0,0,0.6);
       padding: 15px 25px;
-      border-radius: 50px;
+      border-radius: 20px;
       margin-bottom: 30px;
     }
-    .custom-player button {
+    .custom-player img {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .controls button {
       font-size: 24px;
       background: none;
       border: none;
@@ -39,10 +47,8 @@
       cursor: pointer;
       transition: transform 0.2s;
     }
-    .custom-player button:hover { transform: scale(1.2); }
-    .custom-player span {
-      font-size: 18px;
-    }
+    .controls button:hover { transform: scale(1.2); }
+    .controls span { font-size: 18px; }
     ul {
       list-style: none;
       padding: 0;
@@ -71,8 +77,11 @@
   <h2>🎧 RAI Podcast</h2>
 
   <div class="custom-player">
-    <button id="playPause">▶️</button>
-    <span id="nowPlaying">Эпизод 1</span>
+    <img src="cover.jpg" alt="Обложка">
+    <div class="controls">
+      <button id="playPause">▶️</button>
+      <span id="nowPlaying">Эпизод 1</span>
+    </div>
   </div>
 
   <audio id="player"></audio>
