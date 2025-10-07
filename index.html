@@ -17,32 +17,32 @@
       min-height: 100vh;
       padding-top: 50px;
     }
-    h2 { text-shadow: 0 0 10px rgba(0,0,0,0.7); margin-bottom: 30px; }
-    .player-circle {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: #222;
+    h2 {
+      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+      margin-bottom: 20px;
+    }
+    .custom-player {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      gap: 15px;
+      background: rgba(0,0,0,0.6);
+      padding: 15px 25px;
+      border-radius: 50px;
       margin-bottom: 30px;
     }
-    .player-circle img {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;
+    .custom-player button {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: #4caf50;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-    .progress-ring {
-      position: absolute;
-      top: 0; left: 0;
-      width: 200px;
-      height: 200px;
-      transform: rotate(-90deg);
+    .custom-player button:hover { transform: scale(1.2); }
+    .custom-player span {
+      font-size: 18px;
     }
-    audio { display: none; }
     ul {
       list-style: none;
       padding: 0;
@@ -70,11 +70,9 @@
 
   <h2>🎧 RAI Podcast</h2>
 
-  <div class="player-circle">
-    <svg class="progress-ring" width="200" height="200">
-      <circle cx="100" cy="100" r="90" stroke="#4caf50" stroke-width="8" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="565.48"/>
-    </svg>
-    <img src="cover.jpg" alt="Обложка">
+  <div class="custom-player">
+    <button id="playPause">▶️</button>
+    <span id="nowPlaying">Эпизод 1</span>
   </div>
 
   <audio id="player"></audio>
@@ -88,3 +86,60 @@
 
   <script>
     const player = document.getElementById('player');
+    const playPause = document.getElementById('playPause');
+    const nowPlaying = document.getElementById('nowPlaying');
+    const episodes = document.querySelectorAll('#episodeList li');
+
+    const KEY_PREFIX = 'podcast_pos_';
+    const LAST_EP_KEY = 'podcast_last_ep';
+
+    function loadEpisode(episode) {
+      const src = episode.dataset.src;
+      player.src = src;
+
+      episodes.forEach(e => e.classList.remove('active'));
+      episode.classList.add('active');
+
+      nowPlaying.textContent = episode.textContent;
+      localStorage.setItem(LAST_EP_KEY, src);
+
+      const saved = localStorage.getItem(KEY_PREFIX + src);
+      player.addEventListener('loadedmetadata', () => {
+        if (saved) player.currentTime = parseFloat(saved);
+      }, { once: true });
+
+      player.play();
+      playPause.textContent = '⏸️';
+    }
+
+    // Загрузка последнего эпизода
+    window.addEventListener('load', () => {
+      const last = localStorage.getItem(LAST_EP_KEY);
+      const episode = Array.from(episodes).find(e => e.dataset.src === last) || episodes[0];
+      loadEpisode(episode);
+    });
+
+    // Клик по эпизоду
+    episodes.forEach(episode => {
+      episode.addEventListener('click', () => loadEpisode(episode));
+    });
+
+    // Кнопка Play/Pause
+    playPause.addEventListener('click', () => {
+      if (player.paused) {
+        player.play();
+        playPause.textContent = '⏸️';
+      } else {
+        player.pause();
+        playPause.textContent = '▶️';
+      }
+    });
+
+    // Сохраняем прогресс
+    player.addEventListener('timeupdate', () => {
+      localStorage.setItem(KEY_PREFIX + player.src.split('/').pop(), player.currentTime);
+    });
+  </script>
+
+</body>
+</html>
