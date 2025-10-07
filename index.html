@@ -17,85 +17,86 @@
       min-height: 100vh;
       padding-top: 50px;
     }
-    h2 {
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    h2 { text-shadow: 0 0 10px rgba(0,0,0,0.7); margin-bottom: 30px; }
+    .player-circle {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
     }
-    audio {
-      width: 90%;
-      max-width: 600px;
-      margin-bottom: 20px;
+    .player-circle img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
     }
+    .progress-ring {
+      position: absolute;
+      top: 0; left: 0;
+      width: 200px;
+      height: 200px;
+      transform: rotate(-90deg);
+    }
+    audio { display: none; }
     ul {
       list-style: none;
       padding: 0;
+      margin: 0;
+      width: 90%;
+      max-width: 600px;
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
     }
     li {
       cursor: pointer;
       background: rgba(0,0,0,0.6);
-      padding: 10px 15px;
-      border-radius: 5px;
+      padding: 12px 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 18px;
+      transition: background 0.2s ease;
     }
-    li.active {
-      background: rgba(76, 175, 80, 0.8);
-    }
+    li:hover { background: rgba(255,255,255,0.2); }
+    li.active { background: rgba(76, 175, 80, 0.8); }
   </style>
 </head>
 <body>
 
-  <h2>🎧 RAI Podcast</h2>
-  <audio id="player" controls>
-    Ваш браузер не поддерживает аудио.
-  </audio>
+  <h2>🎧 Ибо так говорит Писание</h2>
+
+  <div class="player-circle">
+    <svg class="progress-ring" width="200" height="200">
+      <circle cx="100" cy="100" r="90" stroke="#4caf50" stroke-width="8" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="565.48"/>
+    </svg>
+    <img src="cover.jpg" alt="Обложка">
+  </div>
+
+  <audio id="player"></audio>
 
   <ul id="episodeList">
-    <li data-src="episode1.mp3" class="active">Эпизод 1</li>
-    <li data-src="episode2.mp3">Эпизод 2</li>
-    <li data-src="episode3.mp3">Эпизод 3</li>
-    <li data-src="episode4.mp3">Ч-4 Послание к Евреям - Часть-4 - Ибо так говорит Писание</li>
+    <li data-src="episode1.mp3" class="active">Часть 1 - Послание к евреям</li>
+    <li data-src="episode2.mp3">Часть 2 - Послание к евреям</li>
+    <li data-src="episode3.mp3">Часть 3 - Послание к евреям</li>
+    <li data-src="episode4.mp3">Часть 4 - Послание к евреям</li>
   </ul>
 
   <script>
     const player = document.getElementById('player');
     const episodes = document.querySelectorAll('#episodeList li');
+    const circle = document.querySelector('.progress-ring circle');
+    const radius = circle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = circumference;
 
     const KEY_PREFIX = 'podcast_pos_';
     const LAST_EP_KEY = 'podcast_last_ep';
 
-    function loadEpisode(episode) {
-      const src = episode.dataset.src;
-      player.src = src;
-
-      episodes.forEach(e => e.classList.remove('active'));
-      episode.classList.add('active');
-
-      localStorage.setItem(LAST_EP_KEY, src);
-
-      const saved = localStorage.getItem(KEY_PREFIX + src);
-      if (saved) player.currentTime = parseFloat(saved);
-      player.play();
-    }
-
-    window.addEventListener('load', () => {
-      const last = localStorage.getItem(LAST_EP_KEY);
-      const episode = Array.from(episodes).find(e => e.dataset.src === last) || episodes[0];
-      loadEpisode(episode);
-    });
-
-    episodes.forEach(episode => {
-      episode.addEventListener('click', () => loadEpisode(episode));
-    });
-
-    player.addEventListener('timeupdate', () => {
-      localStorage.setItem(KEY_PREFIX + player.src.split('/').pop(), player.currentTime);
-    });
-  </script>
-
-</body>
-</html>
-
-
+    function setProgress(percent) {
+      const offse
