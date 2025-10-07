@@ -16,39 +16,26 @@
       align-items: center;
       min-height: 100vh;
       padding-top: 50px;
+      backdrop-filter: blur(5px);
     }
     h2 { text-shadow: 0 0 10px rgba(0,0,0,0.7); margin-bottom: 30px; }
-    .custom-player {
-      display: flex;
-      align-items: center;
-      gap: 20px;
+    .player-container {
+      width: 90%;
+      max-width: 600px;
       background: rgba(0,0,0,0.6);
-      padding: 15px 25px;
-      border-radius: 20px;
-      margin-bottom: 30px;
-    }
-    .custom-player img {
-      width: 80px;
-      height: 80px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-    .controls {
+      padding: 20px;
+      border-radius: 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      align-items: flex-start;
+      align-items: center;
+      margin-bottom: 30px;
     }
-    .controls button {
-      font-size: 24px;
-      background: none;
-      border: none;
-      color: #4caf50;
-      cursor: pointer;
-      transition: transform 0.2s;
+    audio {
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
     }
-    .controls button:hover { transform: scale(1.2); }
-    .controls span { font-size: 18px; }
     ul {
       list-style: none;
       padding: 0;
@@ -76,15 +63,10 @@
 
   <h2>🎧 RAI Podcast</h2>
 
-  <div class="custom-player">
-    <img src="cover.jpg" alt="Обложка">
-    <div class="controls">
-      <button id="playPause">▶️</button>
-      <span id="nowPlaying">Эпизод 1</span>
-    </div>
+  <div class="player-container">
+    <img src="cover.jpg" alt="Обложка" style="width:100%; border-radius:12px; object-fit:cover;">
+    <audio id="player" controls></audio>
   </div>
-
-  <audio id="player"></audio>
 
   <ul id="episodeList">
     <li data-src="episode1.mp3" class="active">Эпизод 1</li>
@@ -95,8 +77,6 @@
 
   <script>
     const player = document.getElementById('player');
-    const playPause = document.getElementById('playPause');
-    const nowPlaying = document.getElementById('nowPlaying');
     const episodes = document.querySelectorAll('#episodeList li');
 
     const KEY_PREFIX = 'podcast_pos_';
@@ -109,7 +89,6 @@
       episodes.forEach(e => e.classList.remove('active'));
       episode.classList.add('active');
 
-      nowPlaying.textContent = episode.textContent;
       localStorage.setItem(LAST_EP_KEY, src);
 
       const saved = localStorage.getItem(KEY_PREFIX + src);
@@ -118,7 +97,6 @@
       }, { once: true });
 
       player.play();
-      playPause.textContent = '⏸️';
     }
 
     // Загрузка последнего эпизода
@@ -131,17 +109,6 @@
     // Клик по эпизоду
     episodes.forEach(episode => {
       episode.addEventListener('click', () => loadEpisode(episode));
-    });
-
-    // Кнопка Play/Pause
-    playPause.addEventListener('click', () => {
-      if (player.paused) {
-        player.play();
-        playPause.textContent = '⏸️';
-      } else {
-        player.pause();
-        playPause.textContent = '▶️';
-      }
     });
 
     // Сохраняем прогресс
