@@ -68,7 +68,7 @@
 </head>
 <body>
 
-  <h2>🎧 Ибо так говорит Писание</h2>
+  <h2>🎧 RAI Podcast</h2>
 
   <div class="player-circle">
     <svg class="progress-ring" width="200" height="200">
@@ -80,23 +80,11 @@
   <audio id="player"></audio>
 
   <ul id="episodeList">
-    <li data-src="episode1.mp3" class="active">Часть 1 - Послание к евреям</li>
-    <li data-src="episode2.mp3">Часть 2 - Послание к евреям</li>
-    <li data-src="episode3.mp3">Часть 3 - Послание к евреям</li>
-    <li data-src="episode4.mp3">Часть 4 - Послание к евреям</li>
+    <li data-src="episode1.mp3" class="active">Эпизод 1</li>
+    <li data-src="episode2.mp3">Эпизод 2</li>
+    <li data-src="episode3.mp3">Эпизод 3</li>
+    <li data-src="episode4.mp3">Эпизод 4</li>
   </ul>
 
   <script>
     const player = document.getElementById('player');
-    const episodes = document.querySelectorAll('#episodeList li');
-    const circle = document.querySelector('.progress-ring circle');
-    const radius = circle.r.baseVal.value;
-    const circumference = 2 * Math.PI * radius;
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = circumference;
-
-    const KEY_PREFIX = 'podcast_pos_';
-    const LAST_EP_KEY = 'podcast_last_ep';
-
-    function setProgress(percent) {
-      const offse
